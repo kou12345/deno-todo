@@ -1,34 +1,39 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
+import { db } from "../utility/database.ts";
 
-interface Article {
-  id: string;
+interface User {
+  id: number;
   title: string;
-  created_at: string;
+  is_done: boolean;
+  created_at: Date;
+  updated_at: Date;
 }
 
-export const handler: Handlers<Article[]> = {
+export const handler: Handlers<User[]> = {
   async GET(_req, ctx) {
     console.log("GET /");
-    const articles: Article[] = [
-      {
-        id: "1",
-        title: "Article 1",
-        created_at: "2022-06-17T00:00:00.000Z",
-      },
-      {
-        id: "2",
-        title: "Article 2",
-        created_at: "2022-06-10T00:00:00.000Z",
-      },
-    ];
+    const result = (await db.execute("SELECT * FROM users")).rows;
+    console.log(result);
 
-    const resp = await ctx.render(articles);
+    const users: User[] = [];
+    result.map((user) => {
+      console.log(user);
+      users.push({
+        id: Number(user.id),
+        title: String(user.title),
+        is_done: Boolean(user.is_done),
+        created_at: new Date(user.created_at as string),
+        updated_at: new Date(user.updated_at as string),
+      } as User);
+    });
+
+    const resp = await ctx.render(users);
     return resp;
   },
 };
 
-export default function Home({ data }: PageProps<Article[]>) {
+export default function Home({ data }: PageProps<User[]>) {
   console.log("data", data);
   return (
     <div>
@@ -37,11 +42,10 @@ export default function Home({ data }: PageProps<Article[]>) {
       </Head>
       <section>
         <ul>
-          {data.map((article) => (
-            <li key={article.id}>
-              <a href={`articles/${article.id}`}>
-                <h3>{article.title}</h3>
-                <time dateTime={article.created_at}>{article.created_at}</time>
+          {data.map((user) => (
+            <li key={user.id}>
+              <a href={`users/${user.id}`}>
+                <h3>{user.title}</h3>
               </a>
             </li>
           ))}
