@@ -35,6 +35,10 @@ export const handler: Handlers<User[]> = {
 
 export default function Home({ data }: PageProps<User[]>) {
   console.log("data", data);
+
+  data.map((user) => {
+    console.log(user.created_at);
+  });
   return (
     <div>
       <Head>
@@ -47,6 +51,10 @@ export default function Home({ data }: PageProps<User[]>) {
               <a href={`users/${user.id}`}>
                 <h3>{user.title}</h3>
               </a>
+              <p>{user.is_done ? "Done" : "not Done"}</p>
+              <time dateTime={user.created_at.toISOString()}>
+                {user.created_at.toISOString()}
+              </time>
             </li>
           ))}
         </ul>
