@@ -1,6 +1,6 @@
 import "https://deno.land/std@0.204.0/dotenv/load.ts";
 
-import { type Config, createClient } from "https://esm.sh/@libsql/client";
+import { type Config, createClient } from "https://esm.sh/@libsql/client@0.3.6";
 
 const config = {
   url: Deno.env.get("TORSO_DB_URL"),
