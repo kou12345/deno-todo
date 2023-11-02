@@ -2,14 +2,30 @@ import { db } from "../utility/database.ts";
 
 console.log(db);
 
-const createResult = await db.execute(
-  `CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    title TEXT NOT NULL, 
-    is_done INTEGER NOT NULL DEFAULT 0,
-    created_at TEXT NOT NULL, 
-    updated_at TEXT NOT NULL
-    );`,
-);
+const users = `
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        password TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+`;
 
-console.log(createResult);
+const todos = `
+    CREATE TABLE IF NOT EXISTS todos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        is_done INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        FOREIGN KEY(user_id) REFERENCES users(id)
+    );
+`;
+
+const createUsersResult = await db.execute(users);
+const createTodosResult = await db.execute(todos);
+
+console.log(createUsersResult);
+console.log(createTodosResult);
