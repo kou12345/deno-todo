@@ -61,8 +61,12 @@ export const handler: Handlers = {
       });
     }
 
+    const headers = new Headers();
+    headers.set("location", "/");
+
     return new Response(null, {
-      status: 200,
+      status: 303,
+      headers,
     });
   },
 };
