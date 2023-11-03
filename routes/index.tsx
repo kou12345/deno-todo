@@ -1,6 +1,6 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { db } from "../utility/database.ts";
+import { db } from "../utils/database.ts";
 
 interface User {
   id: number;
