@@ -43,7 +43,7 @@ export default function Home({ data }: PageProps<Todo[]>) {
   return (
     <div>
       <Head>
-        <title>Fresh Blog</title>
+        <title>ToDo</title>
       </Head>
       <button class="btn">hoge</button>
       <section>
