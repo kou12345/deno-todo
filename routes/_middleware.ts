@@ -6,19 +6,21 @@ export async function handler(
   ctx: MiddlewareHandlerContext,
 ) {
   const url = new URL(req.url);
-  console.log("url: ", url.href);
 
   // ERR_TOO_MANY_REDIRECTSを回避するために、/loginにアクセスしたら、そのまま返す
-  if (url.href === url.origin + "/login") {
+  // url.href === url.origin + "/api/login" /api/loginにアクセスしたら、そのまま返す
+  if (
+    url.href === url.origin + "/login" || url.href === url.origin + "/api/login"
+  ) {
     const resp = await ctx.next();
     return resp;
   }
 
   const cookies = getCookies(req.headers);
-  console.log("cookies: ", cookies.auth);
 
   // cookieにauthがなければ、/loginにリダイレクトする
   if (!cookies.auth) {
+    console.log("cookieにauthがないので、/loginにリダイレクトします");
     return new Response(null, {
       status: 302,
       headers: {
@@ -26,8 +28,6 @@ export async function handler(
       },
     });
   }
-
-  console.log("cookies: ", cookies.auth);
 
   const resp = await ctx.next();
   return resp;
