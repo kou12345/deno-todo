@@ -44,6 +44,7 @@ export default function Home({ data }: PageProps<User[]>) {
       <Head>
         <title>Fresh Blog</title>
       </Head>
+      <button class="btn">hoge</button>
       <section>
         <ul>
           {data.map((user) => (
