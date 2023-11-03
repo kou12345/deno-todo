@@ -7,6 +7,9 @@ export const handler: Handlers = {
     console.log("url: ", url);
 
     const form = await req.formData();
+
+    // ! DB usersテーブルに存在するか確認する
+
     if (form.get("username") === "deno" && form.get("password") === "land") {
       const headers = new Headers();
       setCookie(headers, {
