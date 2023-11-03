@@ -1,6 +1,7 @@
 import type { Handlers, PageProps } from "$fresh/server.ts";
 import { getCookies } from "https://deno.land/std@0.204.0/http/cookie.ts";
 import { Login } from "../components/Login.tsx";
+import { Signup } from "../components/Signup.tsx";
 interface Data {
   isAllowed: boolean;
 }
@@ -28,6 +29,10 @@ export default function Home({ data }: PageProps<Data>) {
         You currently {data.isAllowed ? "are" : "are not"} logged in.
       </div>
       {!data.isAllowed ? <Login /> : <a href="/api/logout">Logout</a>}
+
+      <hr />
+      <h1>Sign Up</h1>
+      <Signup />
     </div>
   );
 }
