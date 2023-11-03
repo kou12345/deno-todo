@@ -45,7 +45,12 @@ export const handler: Handlers = {
       const result = await db.execute({
         sql:
           "INSERT INTO users (name, password, created_at, updated_at) VALUES (?, ?, ?, ?)",
-        args: [username, passwordHash, new Date(), new Date()],
+        args: [
+          username,
+          passwordHash,
+          new Date().toISOString(),
+          new Date().toISOString(),
+        ],
       });
 
       console.log("result: ", result);
