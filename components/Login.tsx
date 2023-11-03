@@ -11,6 +11,7 @@ export function Login() {
             <span className="label-text">UserName</span>
           </label>
           <input
+            name="username"
             type="text"
             placeholder="Type here"
             className="input input-bordered w-full max-w-xs"
@@ -22,6 +23,7 @@ export function Login() {
             <span className="label-text">Password</span>
           </label>
           <input
+            name="password"
             type="Password"
             placeholder="Type here"
             className="input input-bordered w-full max-w-xs"
