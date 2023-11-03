@@ -6,8 +6,10 @@ export function Login() {
         method="post"
         action="/api/login"
       >
-        user name: <input className="border" type="text" name="username" />
-        password: <input className="border" type="password" name="password" />
+        user name:{" "}
+        <input className="border" type="text" name="username" required />
+        password:{" "}
+        <input className="border" type="password" name="password" required />
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           type="submit"
