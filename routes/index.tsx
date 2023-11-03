@@ -50,13 +50,21 @@ export default function Home({ data }: PageProps<Todo[]>) {
         <ul>
           {data.map((todo) => (
             <li key={todo.id}>
-              <a href={`todos/${todo.id}`}>
-                <h3>{todo.title}</h3>
-              </a>
-              <p>{todo.is_done ? "Done" : "not Done"}</p>
-              <time dateTime={todo.created_at.toISOString()}>
-                {todo.created_at.toISOString()}
-              </time>
+              <div className="my-6">
+                <a href={`todos/${todo.id}`}>
+                  <p className="text-xl">{todo.title}</p>
+                </a>
+                <div>
+                  <input
+                    type="checkbox"
+                    checked={todo.is_done}
+                    className="checkbox checkbox-primary"
+                  />
+                </div>
+                <time dateTime={todo.created_at.toISOString()}>
+                  {todo.created_at.toISOString()}
+                </time>
+              </div>
             </li>
           ))}
         </ul>
