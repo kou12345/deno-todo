@@ -1,4 +1,4 @@
-import { db } from "../utility/database.ts";
+import { db } from "../utils/database.ts";
 
 console.log(db);
 
