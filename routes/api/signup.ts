@@ -1,6 +1,6 @@
 import { Handlers } from "$fresh/server.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
-import { db } from "../../utility/database.ts";
+import { db } from "../../utils/database.ts";
 
 export const handler: Handlers = {
   async POST(req) {
