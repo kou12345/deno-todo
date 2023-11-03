@@ -17,6 +17,7 @@ export async function handler(
   const cookies = getCookies(req.headers);
   console.log("cookies: ", cookies.auth);
 
+  // cookieにauthがなければ、/loginにリダイレクトする
   if (!cookies.auth) {
     return new Response(null, {
       status: 302,
