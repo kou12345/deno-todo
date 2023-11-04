@@ -18,9 +18,8 @@ export async function handler(
 
   const cookies = getCookies(req.headers);
 
-  // cookieにauthがなければ、/loginにリダイレクトする
-  if (!cookies.auth) {
-    console.log("cookieにauthがないので、/loginにリダイレクトします");
+  if (!cookies.token) {
+    console.log("cookieがないので、/loginにリダイレクトします");
     return new Response(null, {
       status: 302,
       headers: {
