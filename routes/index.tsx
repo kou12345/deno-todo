@@ -1,5 +1,8 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
+import { getCookies } from "https://deno.land/std@0.205.0/http/cookie.ts";
+import { decode, verify } from "https://deno.land/x/djwt@v3.0.0/mod.ts";
+import { Todo } from "../components/Todo.tsx";
 import { db } from "../utils/database.ts";
 
 interface Todo {
@@ -12,9 +15,39 @@ interface Todo {
 }
 
 export const handler: Handlers<Todo[]> = {
-  async GET(_req, ctx) {
+  async GET(req, ctx) {
     console.log("GET /");
-    const result = (await db.execute("SELECT * FROM todos")).rows;
+
+    const cookies = getCookies(req.headers);
+    console.log(cookies);
+
+    const key = await crypto.subtle.importKey(
+      "raw",
+      new TextEncoder().encode(Deno.env.get("JWT_SECRET_KEY") as string),
+      { name: "HMAC", hash: "SHA-512" },
+      false,
+      ["sign", "verify"],
+    );
+
+    // jWTの検証
+    try {
+      const verifyResult = await verify(cookies.token, key);
+    } catch (e) {
+      console.log("verify error: ", e);
+      return new Response("verify error", { status: 401 });
+    }
+
+    const [header, payload, signature] = decode(cookies.token);
+    console.log("header: ", header);
+    console.log("payload: ", payload);
+    console.log("signature: ", signature);
+
+    const userId = (payload as { userId: number }).userId;
+
+    const result = (await db.execute({
+      sql: "SELECT * FROM todos WHERE user_id = ?",
+      args: [userId],
+    })).rows;
     console.log(result);
 
     const todos: Todo[] = [];
@@ -48,25 +81,7 @@ export default function Home({ data }: PageProps<Todo[]>) {
       <button class="btn">hoge</button>
       <section>
         <ul>
-          {data.map((todo) => (
-            <li key={todo.id}>
-              <div className="my-6">
-                <a href={`todos/${todo.id}`}>
-                  <p className="text-xl">{todo.title}</p>
-                </a>
-                <div>
-                  <input
-                    type="checkbox"
-                    checked={todo.is_done}
-                    className="checkbox checkbox-primary"
-                  />
-                </div>
-                <time dateTime={todo.created_at.toISOString()}>
-                  {todo.created_at.toISOString()}
-                </time>
-              </div>
-            </li>
-          ))}
+          {data.map((todo) => <Todo {...todo} />)}
         </ul>
       </section>
     </div>
