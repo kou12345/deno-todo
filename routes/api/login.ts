@@ -1,7 +1,17 @@
 import { Handlers } from "$fresh/server.ts";
 import { setCookie } from "https://deno.land/std@0.204.0/http/cookie.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
+import { create, decode } from "https://deno.land/x/djwt@v3.0.0/mod.ts";
 import { db } from "../../utils/database.ts";
+
+// これどこに書くのが正しいのか分からない
+const key = await crypto.subtle.importKey(
+  "raw",
+  new TextEncoder().encode(Deno.env.get("JWT_SECRET_KEY") as string),
+  { name: "HMAC", hash: "SHA-512" },
+  false,
+  ["sign", "verify"],
+);
 
 export const handler: Handlers = {
   async POST(req) {
@@ -43,14 +53,31 @@ export const handler: Handlers = {
 
     // passwordの検証
     const passwordValid = await bcrypt.compare(password, passwordHash);
-
     console.log("passwordValid: ", passwordValid);
 
     if (passwordValid) {
+      // JWTの生成
+      // const key = await crypto.subtle.importKey(
+      //   "raw",
+      //   new TextEncoder().encode(Deno.env.get("JWT_SECRET_KEY") as string),
+      //   { name: "HMAC", hash: "SHA-512" },
+      //   false,
+      //   ["sign", "verify"],
+      // );
+
+      const jwt = await create({ alg: "HS512", typ: "JWT" }, {
+        userId: result.rows[0]["id"] as string,
+      }, key);
+
+      const [header, payload, signature] = decode(jwt);
+      console.log("header: ", header);
+      console.log("payload: ", payload);
+      console.log("signature: ", signature);
+
       const headers = new Headers();
       setCookie(headers, {
-        name: "auth",
-        value: crypto.randomUUID(), // this should be a unique value for each session
+        name: "token",
+        value: jwt,
         maxAge: 120,
         sameSite: "Lax", // this is important to prevent CSRF attacks
         domain: url.hostname,
@@ -64,6 +91,7 @@ export const handler: Handlers = {
         headers,
       });
     } else {
+      console.error("Invalid password");
       return new Response(null, {
         status: 403,
       });
