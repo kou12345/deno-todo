@@ -2,17 +2,9 @@ import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { getCookies } from "https://deno.land/std@0.205.0/http/cookie.ts";
 import { decode, verify } from "https://deno.land/x/djwt@v3.0.0/mod.ts";
-import { Todo } from "../components/Todo.tsx";
+import { TodoItem } from "../components/TodoItem.tsx";
+import { Todo } from "../types/types.ts";
 import { db } from "../utils/database.ts";
-
-interface Todo {
-  id: number;
-  user_id: number;
-  title: string;
-  is_done: boolean;
-  created_at: Date;
-  updated_at: Date;
-}
 
 export const handler: Handlers<Todo[]> = {
   async GET(req, ctx) {
@@ -70,6 +62,14 @@ export const handler: Handlers<Todo[]> = {
 export default function Home({ data }: PageProps<Todo[]>) {
   console.log("data", data);
 
+  const hoge = `
+  {
+    "userId": 1,
+    "id": 1,
+    "title": "delectus aut autem",
+    "completed": false
+  }`;
+
   data.map((todo) => {
     console.log(todo.created_at);
   });
@@ -81,8 +81,11 @@ export default function Home({ data }: PageProps<Todo[]>) {
       <button class="btn">hoge</button>
       <section>
         <ul>
-          {data.map((todo) => <Todo {...todo} />)}
+          {data.map((todo) => <TodoItem {...todo} />)}
         </ul>
+        <pre>
+          {hoge}
+        </pre>
       </section>
     </div>
   );
