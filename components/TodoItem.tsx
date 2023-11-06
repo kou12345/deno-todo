@@ -1,12 +1,6 @@
-type Todo = {
-  id: number;
-  title: string;
-  is_done: boolean;
-  created_at: Date;
-  updated_at: Date;
-};
+import { Todo } from "../types/types.ts";
 
-export function Todo(props: Todo) {
+export function TodoItem(props: Todo) {
   return (
     <div className="my-6">
       <a href={`todos/${props.id}`}>
